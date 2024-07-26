@@ -1,3 +1,108 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    /* colors */
+    /* --brand-color: #206A81; */
+    --brand-color: #3B7A9E;
+    --brand-color-secondary: #2E8BC7;
+    /* --text-dark: #333333; */
+    --text-dark: #020E12;
+    --text-dark-secondary: #566468;
+    /* --text-light: #FFFFFF; */
+    --text-light: #E5E5E5;
+    --text-light-secondary: #898989;
+    --background-light: #F5F8FA;
+    --background-dark: #1C2B36;
+    --background-gray: #F0F0F0;
+
+    /* lengths */
+    --header-height: 95px;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* for firefox */
+    /* scrollbar-width: thin; */
+    /* scrollbar-color: var(--brand-color) var(--background-light); */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: all;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.15s;
+
+    /* font-family: 'Inter', sans-serif; */
+}
+
+/* Add these styles in your global CSS or Tailwind CSS configuration */
+::-webkit-scrollbar {
+    width: 6px;
+    /* Adjust the width as needed */
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--brand-color);
+    /* Set the primary color */
+    border-radius: 4px;
+    /* Add some roundness */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    opacity: 0.5;
+    /* Fade out a bit on hover */
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--background-light);
+    /* Set the track color */
+}
+
+.hover\:scrollbar-thumb-opacity-50:hover::-webkit-scrollbar-thumb {
+    opacity: 0.5;
+    /* Apply opacity on hover */
+}
+
+.hover\:scrollbar-track-opacity-50:hover::-webkit-scrollbar-track {
+    opacity: 0.5;
+    /* Apply opacity on hover */
+}
+
+.background-light {
+    background-color: #F5F8FA;
+}
+.background-dark {
+    background-color: #1C2B36;
+}
+.background-gray {
+    background-color: #F0F0F0;
+}
+
+@layer components {
+    .site-header {
+        @apply w-full flex items-center min-h-[var(--header-height)] bg-dark text-[var(--text-light)] fixed top-0 left-0 z-20
+    }
+
+    .nav-link {
+        @apply px-3 py-2 rounded-xl ring-transparent hover:ring-1 hover:ring-brand-color hover:text-brand-color hover:bg-light
+    }
+
+    .nav-cta {
+        @apply px-4 py-2 rounded bg-brand-color text-light
+    }
+
+    .site-main {
+        @apply snap-x snap-mandatory flex overflow-x-auto
+    }
+
+    .site-section {
+        @apply w-screen min-h-screen flex-shrink-0 top-0 pt-[var(--header-height)] snap-start
+    }
+}
