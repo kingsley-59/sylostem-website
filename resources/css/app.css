@@ -5,7 +5,7 @@
 :root {
     /* colors */
     /* --brand-color: #206A81; */
-    --brand-color: #3B7A9E;
+    --brand-color: #3b7a9e;
     --brand-color-secondary: #2E8BC7;
     /* --text-dark: #333333; */
     --text-dark: #020E12;
@@ -37,15 +37,31 @@
     transition: all;
     transition-timing-function: ease-in-out;
     transition-duration: 0.15s;
+    scroll-behavior: smooth;
 
     /* font-family: 'Inter', sans-serif; */
 }
+
+/* html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+} */
 
 /* Add these styles in your global CSS or Tailwind CSS configuration */
 ::-webkit-scrollbar {
     width: 6px;
     /* Adjust the width as needed */
     height: 6px;
+}
+
+.site-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -85,9 +101,15 @@
     background-color: #F0F0F0;
 }
 
+@layer base {
+    label {
+        @apply block text-base font-medium text-dark group-has-[:required]:after:content-['*'] group-has-[:required]:after:ml-0.5 group-has-[:required]:after:text-red-500
+    }
+}
+
 @layer components {
     .site-header {
-        @apply w-full flex items-center min-h-[var(--header-height)] bg-dark text-[var(--text-light)] fixed top-0 left-0 z-20
+        @apply w-full flex items-center min-h-[var(--header-height)] bg-dark/55 text-light fixed top-0 left-0 z-20
     }
 
     .nav-link {
@@ -99,10 +121,18 @@
     }
 
     .site-main {
-        @apply snap-x snap-mandatory flex overflow-x-auto
+        @apply flex flex-col 
     }
 
     .site-section {
-        @apply w-screen min-h-screen flex-shrink-0 top-0 pt-[var(--header-height)] snap-start
+        @apply w-full pt-[var(--header-height)] 
+    }
+
+    /* .site-section > div {
+        @apply max-w-screen-2xl mx-auto my-auto
+    } */
+
+    .form-input {
+        @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-color focus:border-brand-color sm:text-sm
     }
 }
