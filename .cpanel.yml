@@ -5,6 +5,7 @@ deployment:
     - export LOGPATH=/home2/sylostem/deploy_logs
     - export REPOPATH=/home2/sylostem/repositories/sylostem-website
     - export DEPLOYPATH=/home2/sylostem/public_html
+    - export COMPOSER_PATH=/opt/cpanel/composer/bin/composer
 
     # Create log directory if it doesn't exist
     - mkdir -p $LOGPATH
@@ -19,7 +20,7 @@ deployment:
 
     # Step 2: Install Composer dependencies
     - echo "Installing Composer dependencies..." >> $LOGPATH/deploy.log
-    - composer install --no-dev --optimize-autoloader --working-dir=$DEPLOYPATH >> $LOGPATH/deploy.log 2>&1
+    - $COMPOSER_PATH install --no-dev --optimize-autoloader --working-dir=$DEPLOYPATH >> $LOGPATH/deploy.log 2>&1
     - echo "Composer dependencies installed." >> $LOGPATH/deploy.log
 
     # Step 3: Set appropriate permissions for storage and bootstrap cache directories
