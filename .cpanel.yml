@@ -3,7 +3,7 @@ deployment:
   tasks:
     # Define log file path
     - export LOGPATH=/home2/sylostem/deploy_logs
-    - export REPOPATH=/home2/sylostem/repository
+    - export REPOPATH=/home2/sylostem/repositories/sylostem-website
     - export DEPLOYPATH=/home2/sylostem/public_html
 
     # Create log directory if it doesn't exist
