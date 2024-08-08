@@ -1,35 +1,56 @@
 ---
 deployment:
   tasks:
-    - export REPOPATH=/home2/sylostem/repositories/sylostem-website # Adjust this if necessary
+    # Define log file path
+    - export LOGPATH=/home2/sylostem/deploy_logs
+    - export REPOPATH=/home2/sylostem/repository
     - export DEPLOYPATH=/home2/sylostem/public_html
 
+    # Create log directory if it doesn't exist
+    - mkdir -p $LOGPATH
+
     # Step 1: Copy files and directories from repository to public_html
-    - cp -R $REPOPATH/* $DEPLOYPATH
+    - echo "Starting file copy..." >> $LOGPATH/deploy.log
+    - cp -R $REPOPATH/* $DEPLOYPATH >> $LOGPATH/deploy.log 2>&1
+    - echo "File copy completed." >> $LOGPATH/deploy.log
 
     # Step 2: Install Composer dependencies
-    - composer install --no-dev --optimize-autoloader --working-dir=$DEPLOYPATH
+    - echo "Installing Composer dependencies..." >> $LOGPATH/deploy.log
+    - composer install --no-dev --optimize-autoloader --working-dir=$DEPLOYPATH >> $LOGPATH/deploy.log 2>&1
+    - echo "Composer dependencies installed." >> $LOGPATH/deploy.log
 
     # Step 3: Set appropriate permissions for storage and bootstrap cache directories
-    - find $DEPLOYPATH/storage -type d -exec chmod 775 {} \;
-    - find $DEPLOYPATH/bootstrap/cache -type d -exec chmod 775 {} \;
-    - find $DEPLOYPATH/storage -type f -exec chmod 664 {} \;
-    - find $DEPLOYPATH/bootstrap/cache -type f -exec chmod 664 {} \;
+    - echo "Setting permissions for storage and cache..." >> $LOGPATH/deploy.log
+    - find $DEPLOYPATH/storage -type d -exec chmod 775 {} \; >> $LOGPATH/deploy.log 2>&1
+    - find $DEPLOYPATH/bootstrap/cache -type d -exec chmod 775 {} \; >> $LOGPATH/deploy.log 2>&1
+    - find $DEPLOYPATH/storage -type f -exec chmod 664 {} \; >> $LOGPATH/deploy.log 2>&1
+    - find $DEPLOYPATH/bootstrap/cache -type f -exec chmod 664 {} \; >> $LOGPATH/deploy.log 2>&1
+    - echo "Permissions set." >> $LOGPATH/deploy.log
 
     # Step 4: Clear and cache configuration
-    - php $DEPLOYPATH/artisan config:clear
-    - php $DEPLOYPATH/artisan config:cache
+    - echo "Clearing and caching configuration..." >> $LOGPATH/deploy.log
+    - php $DEPLOYPATH/artisan config:clear >> $LOGPATH/deploy.log 2>&1
+    - php $DEPLOYPATH/artisan config:cache >> $LOGPATH/deploy.log 2>&1
+    - echo "Configuration cached." >> $LOGPATH/deploy.log
 
     # Step 5: Clear and cache routes
-    - php $DEPLOYPATH/artisan route:clear
-    - php $DEPLOYPATH/artisan route:cache
+    - echo "Clearing and caching routes..." >> $LOGPATH/deploy.log
+    - php $DEPLOYPATH/artisan route:clear >> $LOGPATH/deploy.log 2>&1
+    - php $DEPLOYPATH/artisan route:cache >> $LOGPATH/deploy.log 2>&1
+    - echo "Routes cached." >> $LOGPATH/deploy.log
 
     # Step 6: Clear and cache views
-    - php $DEPLOYPATH/artisan view:clear
-    - php $DEPLOYPATH/artisan view:cache
+    - echo "Clearing and caching views..." >> $LOGPATH/deploy.log
+    - php $DEPLOYPATH/artisan view:clear >> $LOGPATH/deploy.log 2>&1
+    - php $DEPLOYPATH/artisan view:cache >> $LOGPATH/deploy.log 2>&1
+    - echo "Views cached." >> $LOGPATH/deploy.log
 
     # Step 7: Clear any old caches (optional)
-    - php $DEPLOYPATH/artisan cache:clear
+    - echo "Clearing old caches..." >> $LOGPATH/deploy.log
+    - php $DEPLOYPATH/artisan cache:clear >> $LOGPATH/deploy.log 2>&1
+    - echo "Caches cleared." >> $LOGPATH/deploy.log
 
     # Step 8: Run migrations (optional)
-    - php $DEPLOYPATH/artisan migrate --force
+    - echo "Running database migrations..." >> $LOGPATH/deploy.log
+    - php $DEPLOYPATH/artisan migrate --force >> $LOGPATH/deploy.log 2>&1
+    - echo "Database migrations completed." >> $LOGPATH/deploy.log
