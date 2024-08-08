@@ -14,6 +14,9 @@ deployment:
     - cp -R $REPOPATH/* $DEPLOYPATH >> $LOGPATH/deploy.log 2>&1
     - echo "File copy completed." >> $LOGPATH/deploy.log
 
+    # Change to deployment path
+    - cd $DEPLOYPATH
+
     # Step 2: Install Composer dependencies
     - echo "Installing Composer dependencies..." >> $LOGPATH/deploy.log
     - composer install --no-dev --optimize-autoloader --working-dir=$DEPLOYPATH >> $LOGPATH/deploy.log 2>&1
