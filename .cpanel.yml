@@ -1,0 +1,35 @@
+---
+deployment:
+  tasks:
+    - export REPOPATH=/home2/sylostem/repositories/sylostem-website # Adjust this if necessary
+    - export DEPLOYPATH=/home2/sylostem/public_html
+
+    # Step 1: Copy files and directories from repository to public_html
+    - cp -R $REPOPATH/* $DEPLOYPATH
+
+    # Step 2: Install Composer dependencies
+    - composer install --no-dev --optimize-autoloader --working-dir=$DEPLOYPATH
+
+    # Step 3: Set appropriate permissions for storage and bootstrap cache directories
+    - find $DEPLOYPATH/storage -type d -exec chmod 775 {} \;
+    - find $DEPLOYPATH/bootstrap/cache -type d -exec chmod 775 {} \;
+    - find $DEPLOYPATH/storage -type f -exec chmod 664 {} \;
+    - find $DEPLOYPATH/bootstrap/cache -type f -exec chmod 664 {} \;
+
+    # Step 4: Clear and cache configuration
+    - php $DEPLOYPATH/artisan config:clear
+    - php $DEPLOYPATH/artisan config:cache
+
+    # Step 5: Clear and cache routes
+    - php $DEPLOYPATH/artisan route:clear
+    - php $DEPLOYPATH/artisan route:cache
+
+    # Step 6: Clear and cache views
+    - php $DEPLOYPATH/artisan view:clear
+    - php $DEPLOYPATH/artisan view:cache
+
+    # Step 7: Clear any old caches (optional)
+    - php $DEPLOYPATH/artisan cache:clear
+
+    # Step 8: Run migrations (optional)
+    - php $DEPLOYPATH/artisan migrate --force
