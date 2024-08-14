@@ -111,31 +111,42 @@ export default function Home() {
                                 <Link href={route('contact')} className="nav-link">Contact</Link>
                                 <Link href={route('caseStudy')} className="nav-link">Case study</Link>
                             </nav>
-                            <button className="nav-cta hover:scale-105">Free consultation</button>
-                            <span className="cursor-pointer">
+                            <Link href="https://wa.me/+2348141971579?text=Hi%20Sylostem!%20I%20need%20to%20discuss%20my%20next%20project.%20Could%20you%20please%20tell%20me%20more%20about%20your%20services%20and%20how%20you%20can%20help%20me%20achieve%20my%20goals?%20I%20have%20the%20following%20information%3A%0A%0A%0A%0A">
+                                <button className="hidden lg:block nav-cta hover:scale-105">Free consultation</button>
+                            </Link>
+                            <span className="hidden max-lg:block cursor-pointer">
                                 <ListMinus size={28} />
                             </span>
                         </div>
                     </div>
-
                 </header>
                 <main className="site-main ">
                     {/* Hero section */}
-                    <section className="site-section h-screen bg-dark ">
-                        <div className="w-full h-full p-[40px] flex justify-between items-center gap-5">
-                            <div className="space-y-[30px] max-w-[600px]">
-                                <h1 className="font-bold text-6xl text-white ">Empowering your business through innovation and expertise</h1>
-                                <p className="text-light">
+                    <section className="site-section min-h-screen bg-dark relative">
+                        <div className="w-full h-full absolute top-0 left-0 _-z-30" style={{
+                            backgroundImage: `url(${ladySittingPhoto})`,
+                            backgroundPosition: 'top center',
+                            backgroundSize: 'cover',
+                            backgroundAttachment: 'fixed'
+                        }}></div>
+                        <div className="w-full h-full absolute top-0 left-0 p-[40px] pt-[var(--header-height)] bg-dark/90 flex justify-center items-center ">
+                            <div className="space-y-[30px] max-w-[1200px] flex flex-col items-center ">
+                                <h1 className="font-bold text-5xl md:text-6xl text-white text-center">Empowering your business through innovation and expertise</h1>
+                                <p className="text-light max-sm:text-justify max-w-[600px] ">
                                     At Sylostem Technologies, we transform your vision into reality with our top-tier product design, software engineering,
                                     and IT consulting services. Our dynamic and professional team takes the stress out of technology management,
                                     allowing you to focus on what you do best—growing your business.
                                 </p>
-                                <button className="group px-5 py-3 rounded bg-brand-color-secondary text-white flex items-center gap-2 hover:scale-105">
-                                    <span>Talk to us</span>
-                                    <ArrowRight className="group-hover:translate-x-1" stroke="white" />
-                                </button>
+                                <Link href="#contact">
+                                    <button className="group px-5 py-4 rounded bg-brand-color-secondary text-white flex items-center gap-3 hover:scale-105">
+                                        <span className="text-lg font-medium">Talk to us</span>
+                                        <ArrowRight className="group-hover:translate-x-1" stroke="white" />
+                                    </button>
+                                </Link>
                             </div>
-                            <div className="w-full h-full max-lg:hidden relative">
+
+                            {/* Deprecated design (hidden) */}
+                            <div className="w-full h-full hidden relative">
                                 <div className="absolute top-0 right-0 rounded-full w-[200px] aspect-square ml-auto ring-2 ring-brandbg-brand-color-secondary ring-offset-2" style={{
                                     backgroundImage: `url(${macbookPhoto})`,
                                     backgroundPosition: 'center',
@@ -152,8 +163,8 @@ export default function Home() {
 
                     {/* services section */}
                     <section className="site-section  " id="services">
-                        <div className="w-full px-[60px] py-[40px] flex flex-col justify-start items-center gap-12">
-                            <div className="w-full flex justify-between items-center gap-5">
+                        <div className="w-full px-[20px] sm:px-[40px] md:px-[60px] py-[40px] flex flex-col justify-start items-center gap-12">
+                            <div className="w-full flex flex-col md:flex-row md:justify-between items-center gap-5">
                                 <div className="basis-1/2 space-y-4 ">
                                     <h3 className="w-fit text-sm font-bold text-brand-color underline uppercase">
                                         Our Services
@@ -220,7 +231,7 @@ export default function Home() {
 
                     {/* Contact section */}
                     <section className="site-section flex flex-col " id="contact">
-                        <div className="w-full flex-grow lg:max-h-[300px] px-[60px] py-[20px] flex flex-col md:flex-row items-center gap-5 bg-dark ">
+                        <div className="w-full flex-grow lg:max-h-[300px] px-[20px] sm:px-[40px] md:px-[60px] py-[20px] flex flex-col md:flex-row items-center gap-5 bg-dark ">
                             <div className="space-y-3">
                                 <h3 className=" text-sm font-bold text-brand-color underline uppercase">
                                     Our Partners
@@ -242,7 +253,7 @@ export default function Home() {
                             </div>
                         </div>
 
-                        <div className="w-full px-[60px] py-[40px] flex flex-col lg:flex-row justify-between items-start lg:items-center gap-12 ">
+                        <div className="w-full px-[20px] sm:px-[40px] md:px-[60px] py-[40px] flex flex-col lg:flex-row justify-between items-start lg:items-center gap-12 ">
                             <div className="space-y-[30px] basis-1/2">
                                 <div className="max-w-[500px] flex flex-col justify-start items-start gap-[20px]">
                                     <h3 className=" text-sm font-bold text-brand-color underline uppercase">
