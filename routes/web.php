@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -42,6 +43,8 @@ Route::controller(PagesController::class)->group(function () {
     Route::get('/case-study', 'caseStudy')->name('caseStudy');
     Route::get('/welcome', 'welcome')->name('welcome');
 });
+
+Route::post('/contact', [ContactMessageController::class, 'store'])->name('contact.store');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

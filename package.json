@@ -27,6 +27,8 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "lucide-react": "^0.414.0"
+        "lucide-react": "^0.414.0",
+        "react-hook-form": "^7.52.2",
+        "react-hot-toast": "^2.4.1"
     }
 }

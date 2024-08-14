@@ -1,4 +1,4 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { PageProps } from "@/types";
 
 import logo from '@/assets/images/sylostem-logo-text.png';
@@ -6,7 +6,13 @@ import ladySittingPhoto from '@/assets/images/lady-sitting-with-laptop-unspash.j
 import macbookPhoto from '@/assets/images/macbook-with-code-unsplash.jpg'
 import statsDashboardPhoto from '@/assets/images/statistics-on-a-laptop.jpg'
 import wireframePhoto from '@/assets/images/wirefram-tablet.jpg'
-import { ArrowRight, BriefcaseBusiness, ChartNoAxesCombined, ListMinus, Mail, MonitorSmartphone, Phone, Play, WandSparkles } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, ChartNoAxesCombined, ListMinus, Mail, MonitorSmartphone, Phone, Play, WandSparkles, XCircle } from "lucide-react";
+import { useEffect } from "react";
+import Layout from "@/Layouts/Layout";
+import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { isValidPhoneNumber } from "@/utils/validations";
 
 
 const services = [
@@ -32,10 +38,65 @@ const services = [
     }
 ]
 
+interface ContactForm {
+    fullname: string,
+    email: string,
+    phone: string,
+    subject: string,
+    message: string,
+    files?: FileList,
+}
+
 export default function Home() {
+    const { flash } = usePage<PageProps & { flash: any }>().props
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>()
+
+    useEffect(() => {
+        if (flash?.success) {
+            toast(flash.success);
+        }
+    }, [flash]);
+
+    const onSubmit = async (data: ContactForm) => {
+        // Create a FormData object to handle the file uploads
+        const formData = new FormData();
+
+        // Append all other form fields to the FormData object
+        formData.append('fullname', data.fullname);
+        formData.append('email', data.email);
+        formData.append('phone', data.phone);
+        formData.append('subject', data.subject);
+        formData.append('message', data.message);
+
+        // If there are files, append them to the FormData object
+        if (data.files && data.files.length > 0) {
+            Array.from(data.files).forEach((file, index) => {
+                formData.append(`files[${index}]`, file);
+            });
+        }
+
+        try {
+            // Send the form data with files using axios
+            await axios.post(route('contact.store'), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            // Show success toast notification
+            toast.success('Message sent successfully!');
+
+            // Reset the form
+            reset();
+        } catch (error) {
+            // Handle errors (optional)
+            console.error('Error submitting form:', error);
+            toast.error('Failed to send the message.');
+        }
+    }
 
     return (
-        <>
+        <Layout>
             <Head title="Sylostem - Designing and curating great products..." />
             <div className="bg-[var(--background-light)] relative">
                 <header className="site-header px-12">
@@ -59,6 +120,7 @@ export default function Home() {
 
                 </header>
                 <main className="site-main ">
+                    {/* Hero section */}
                     <section className="site-section h-screen bg-dark ">
                         <div className="w-full h-full p-[40px] flex justify-between items-center gap-5">
                             <div className="space-y-[30px] max-w-[600px]">
@@ -73,7 +135,7 @@ export default function Home() {
                                     <ArrowRight className="group-hover:translate-x-1" stroke="white" />
                                 </button>
                             </div>
-                            <div className="w-full h-full relative">
+                            <div className="w-full h-full max-lg:hidden relative">
                                 <div className="absolute top-0 right-0 rounded-full w-[200px] aspect-square ml-auto ring-2 ring-brandbg-brand-color-secondary ring-offset-2" style={{
                                     backgroundImage: `url(${macbookPhoto})`,
                                     backgroundPosition: 'center',
@@ -231,34 +293,37 @@ export default function Home() {
                                     </div>
                                 </div>
                             </div>
-                            <form className="w-full space-y-6 basis-1/2 ">
+                            <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6 basis-1/2 ">
                                 <div className="grid gap-4">
                                     <div className="w-full grid md:grid-cols-2 gap-4">
                                         <div className="group grid gap-2 ">
                                             <label className="">Full name</label>
-                                            <input type="text" className="form-input" placeholder="John Doe" required />
+                                            <input type="text" {...register('fullname')} className="form-input" placeholder="John Doe" required />
                                         </div>
                                         <div className="grid gap-2">
                                             <label htmlFor="">Company (or Personal) email</label>
-                                            <input type="email" className="form-input" placeholder="john.doe@example.com" required />
+                                            <input type="email" {...register('email')} className="form-input" placeholder="john.doe@example.com" required />
                                         </div>
                                     </div>
                                     <div className="w-full grid md:grid-cols-2 gap-4">
                                         <div className="grid gap-2">
                                             <label htmlFor="">Phone number</label>
-                                            <input type="tel" className="form-input" placeholder="+1 234 567 890" required />
+                                            <input type="tel" {...register('phone', {
+                                                required: "Phone number is required",
+                                                validate: (value) => isValidPhoneNumber(value) || 'Invalid phone number format',
+                                            })} className="form-input" placeholder="+1 234 567 890" required />
                                         </div>
                                         <div className="grid gap-2">
                                             <label htmlFor="">Subject:</label>
-                                            <input type="text" className="form-input" placeholder="Enter your subject" required />
+                                            <input type="text" {...register('subject')} className="form-input" placeholder="Enter your subject" required />
                                         </div>
                                     </div>
                                     <div className="w-full grid gap-2">
                                         <label htmlFor="">Message</label>
                                         <div className="form-input h-fit">
-                                            <textarea rows={5} className="w-full border-none outline-none focus:ring-0" placeholder="Enter your message" required></textarea>
+                                            <textarea rows={5} {...register('message')} className="w-full border-none outline-none focus:ring-0" placeholder="Enter your message" required></textarea>
                                             <span className="sr-only">Select files</span>
-                                            <input type="file" className={`
+                                            <input type="file" multiple {...register('files')} className={`
                                                 block w-full text-sm text-slate-500
                                                 file:mr-4 file:py-2 file:px-4
                                                 file:rounded-full file:border-0
@@ -268,6 +333,14 @@ export default function Home() {
                                                 `}
                                             />
                                         </div>
+                                    </div>
+                                    <div className="w-full grid">
+                                        {errors && Object.keys(errors).map((key) => (
+                                            <small className="text-red-500 flex gap-1" key={key}>
+                                                <XCircle size={16} />
+                                                {(errors as Record<string, any>)[key]?.message}
+                                            </small>
+                                        ))}
                                     </div>
                                     <div className="w-full space-y-1">
                                         <button className="w-full p-4 bg-gradient-to-b from-brand-color-secondary to-brand-color text-white font-medium rounded-md">Submit</button>
@@ -279,6 +352,8 @@ export default function Home() {
                     </section>
                     {/* <section className="site-section bg-yellow-400">Section 4</section> */}
                 </main>
+
+                {/* Footer */}
                 <footer className="w-full p-5 md:p-10 bg-[#020E12] text-light space-y-6">
                     <div className="max-w-[350px] mr-auto">
                         <img src={logo} alt="sylostem logo" />
@@ -323,6 +398,6 @@ export default function Home() {
                     </div>
                 </footer>
             </div>
-        </>
+        </Layout>
     )
 }
