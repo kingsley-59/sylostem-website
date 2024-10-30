@@ -97,7 +97,10 @@ export default function Home() {
 
     return (
         <Layout>
-            <Head title="Sylostem - Designing and curating great products..." />
+            <Head >
+                <title>Welcome</title>
+                <meta name="description" content="Designing and curating great products." />
+            </Head>
             <div className="bg-[var(--background-light)] relative">
                 <header className="site-header px-12">
                     <div className="w-full flex justify-between items-center gap-5">
